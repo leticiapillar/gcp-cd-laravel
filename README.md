@@ -34,3 +34,13 @@ O comando abaixo cria um secret generico para o MySQL via linha de comando para 
 # Lista as secrets do kubernetes
 > kubectl get secret
 ```
+
+***Executando o POD do NGInx***
+```Bash
+> kubectl exec -it nginx-deployment-56dd4d8778-rdfzp apk update
+> kubectl exec -it nginx-deployment-56dd4d8778-rdfzp apk add  bash
+> kubectl exec -it nginx-deployment-56dd4d8778-rdfzp bash
+```
+
+***Permissão no GCP para executar o kubectl***
+Adicionar permissão `Kubernetes Engine Admin` para a conta XXX@cloudbuild.gserviceaccount.com, esta conta já possui a permissão `Cloud Build Service`.
