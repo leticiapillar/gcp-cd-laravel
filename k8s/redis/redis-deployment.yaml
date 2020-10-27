@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-master
+  labels:
+    app: redis
+spec: # specs do deployment
+  replicas: 1
+  selector: # selector utilizado para criar o service
+    matchLabels:
+      app: redis
+  template: # referente ao POD
+    metadata:
+      labels:
+        app: redis
+        role: master
+    spec: # spec do POD
+      containers:
+      - name: redis
+        image: redis
+        ports:
+        - containerPort: 6379

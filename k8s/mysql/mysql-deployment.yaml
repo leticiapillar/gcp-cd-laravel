@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-service
+  labels:
+    app: nginx
+spec: # specs do deployment
+  
+  replicas: 1
+  
+  selector: # selector utilizado para criar o service
+    matchLabels:
+      app: mysql-service
+      tier: db
+
+  template: # referente ao POD
+    metadata:
+      labels:
+        app: mysql-service
+        tier: db
+    spec: # spec do POD
+      containers:
+      - name: mysql-service
+        image: mysql:5.7
+        args: # ignora o arquivo lost+found que vem com o volume
+          - "--ignore-db-dir=lost+found"
+        
+        ports:
+        - containerPort: 3306
+        
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          #value: root # informa a senha direto no arquivo
+          valueFrom: # usa a secret criada no kubernetes para o banco de dados
+            secretKeyRef:
+              name: mysql-pass
+              key: password
+        
+        volumeMounts: # monta efetivament o volume definido
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      
+      volumes:  # definição do volume
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
