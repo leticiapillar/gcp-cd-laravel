@@ -7,6 +7,12 @@
 Projeto laravel usando MySQL, NGinx e Redis, com as configurações de CI, CD, Kubernetes no GCP.
 
 
+#### Congfigurações do CloudBuild
+
+- Processo de CI: `cloudbuild.yaml`
+- Processo de CD: `cloudbuild.prod.yaml`
+
+
 #### Congfigurações do Kubernetes
 
 - MySQL: `k8s/mysql`
