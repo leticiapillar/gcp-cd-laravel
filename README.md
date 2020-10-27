@@ -12,7 +12,7 @@ Projeto laravel usando MySQL, NGinx e Redis, com as configurações de CI, CD, K
 - MySQL: `k8s/mysql`
 - Redis: `k8s/redis`
 - Nginx: `k8s/nginx`
-
+- Aplicação Laravel: `k8s/app`
 
 ***Secret para o MySQL***
 
