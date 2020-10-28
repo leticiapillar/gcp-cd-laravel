@@ -6,6 +6,6 @@ spec:
   ports:
     - port: 3306
   selector: # Busca todos os pods com essa definição de seletor
-    app: mysql-server
+    app: mysql-service
     tier: db
   clusterIP: None # define que o serviço do banco de dados não seja acessado fora do cluster
