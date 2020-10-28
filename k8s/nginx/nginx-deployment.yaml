@@ -17,7 +17,8 @@ spec: # specs do deployment
       containers:
       - name: nginx
         image: nginx:1.19-alpine
-        command: ["/bin/sh", "-c", "touch /usr/share/nginx/html/index.php; nginx -g 'daemon off;'"]
+        # command: ["/bin/sh", "-c", "touch /usr/share/nginx/html/index.php; nginx -g 'daemon off;'"]
+        command: ["/bin/sh", "-c", "touch /var/www/public/index.php; nginx -g 'daemon off;'"]
         ports:
         - containerPort: 80
         volumeMounts:
