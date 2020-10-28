@@ -35,7 +35,35 @@ O comando abaixo cria um secret generico para o MySQL via linha de comando para 
 > kubectl get secret
 ```
 
-***Executando o POD do NGInx***
+***Criando um banco de dados e testando o volume persistente***
+
+```Bash
+# Executamos o pod de serviço do mysql
+> kubectl get pods
+NAME                               READY   STATUS    RESTARTS   AGE
+mysql-service-7ddf6557b6-fj484     1/1     Running   0          16m
+> kubectl exec -it mysql-service-7ddf6557b6-fj484 bash
+# Dentro do pod do mysql
+root@mysql-service-7ddf6557b6-fj484:/# mysql -uroot -p
+Enter password:
+mysql> show databases;
+mysql> create database code;
+
+# Deletamos o deployment do mysql
+> kubectl delete -f mysql-deployment.yaml
+# Criamos o pod novamente
+> kubectl apply -f mysql-deployment.yaml
+> kubectl get pods
+NAME                               READY   STATUS    RESTARTS   AGE
+mysql-service-7ddf6557b6-s8snh     1/1     Running   0          8s
+# Dentro do pod do mysql
+root@mysql-service-7ddf6557b6-fj484:/# mysql -uroot -p
+Enter password:
+mysql> show databases;
+- O banco de dados `code` deve ser listado
+```
+
+***Executando o POD do Nginx***
 ```Bash
 > kubectl exec -it nginx-deployment-56dd4d8778-rdfzp apk update
 > kubectl exec -it nginx-deployment-56dd4d8778-rdfzp apk add  bash
