@@ -20,7 +20,13 @@ Projeto laravel usando MySQL, NGinx e Redis, com as configurações de CI, CD, K
 - Nginx: `k8s/nginx`
 - Aplicação Laravel: `k8s/app`
 
-***Secret para o MySQL***
+***Configurações do MySQL***
+
+1. Criar a Secret para o MySQL
+2. Aplicar as configurações no kubernetes, `PersistentVolumeClaim, Deployment e Service`
+3. Executar o POD do MySQL e criar o banco de dados `laravel` 
+
+- *Secret para o MySQL*
 
 O comando abaixo cria um secret generico para o MySQL via linha de comando para não armazenar essa senha em arquivo, com o nome `mysql-pass` e a key `password`. Depois alteramos o arquivo de deployment do mysql para usar esta secret.
 
@@ -35,19 +41,22 @@ O comando abaixo cria um secret generico para o MySQL via linha de comando para 
 > kubectl get secret
 ```
 
-***Criando um banco de dados e testando o volume persistente***
+- *Criando um banco de dados e testando o volume persistente*
 
 ```Bash
 # Executamos o pod de serviço do mysql
 > kubectl get pods
 NAME                               READY   STATUS    RESTARTS   AGE
 mysql-service-7ddf6557b6-fj484     1/1     Running   0          16m
+> kubectl exec -it mysql-service-7ddf6557b6-fj484 apk update
+> kubectl exec -it mysql-service-7ddf6557b6-fj484 apk add bash
 > kubectl exec -it mysql-service-7ddf6557b6-fj484 bash
 # Dentro do pod do mysql
+root@mysql-service-7ddf6557b6-fj484:/# mysql -uroot -hmysql-service -p
 root@mysql-service-7ddf6557b6-fj484:/# mysql -uroot -p
 Enter password:
 mysql> show databases;
-mysql> create database code;
+mysql> create database laravel;
 
 # Deletamos o deployment do mysql
 > kubectl delete -f mysql-deployment.yaml
@@ -60,14 +69,30 @@ mysql-service-7ddf6557b6-s8snh     1/1     Running   0          8s
 root@mysql-service-7ddf6557b6-fj484:/# mysql -uroot -p
 Enter password:
 mysql> show databases;
-- O banco de dados `code` deve ser listado
+- O banco de dados `laravel` deve ser listado
 ```
 
-***Executando o POD do Nginx***
+***Configurações do NGinx***
+
+O `ConfigMap` do nginx aponta para este diretorio `/usr/share/nginx/html`.
+
+No arquivodo de deployment adicionar o comando abaixo na especificação do container do nginx, para criar o arquivo `index.php`
+```Bash
+> command: ["/bin/sh", "-c", "touch /usr/share/nginx/html/index.php; nginx -g 'daemon off;'"]
+```
+
+- *Executando o POD do Nginx*
 ```Bash
 > kubectl exec -it nginx-deployment-56dd4d8778-rdfzp apk update
 > kubectl exec -it nginx-deployment-56dd4d8778-rdfzp apk add  bash
 > kubectl exec -it nginx-deployment-56dd4d8778-rdfzp bash
+```
+
+***Configurações da Aplicação Laravel***
+
+No arquivodo de deployment adicionar o comando abaixo na especificação do container do PHP, para criar o link sinbolico entre os diretorios `/var/www /usr/share/nginx`, e executar um script com os comando de execução do php e migração.
+```Bash
+> command: ["/bin/sh","-c","ln -s /var/www /usr/share/nginx; /var/www/k8s/entrypoint.sh; php-fpm;"]
 ```
 
 ***Permissão no GCP para executar o kubectl***
