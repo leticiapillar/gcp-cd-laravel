@@ -97,3 +97,12 @@ No arquivodo de deployment adicionar o comando abaixo na especificação do cont
 
 ***Permissão no GCP para executar o kubectl***
 Adicionar permissão `Kubernetes Engine Admin` para a conta XXX@cloudbuild.gserviceaccount.com, esta conta já possui a permissão `Cloud Build Service`.
+
+
+***Permissão no Laravel e Docker***
+Ao executar acessar a aplicação carrega uma página com o seguinte erro:
+- The stream or file "/var/www/storage/logs/laravel.log" could not be opened in append mode: failed to open stream: **Permission denied**
+
+Para solucionar o problema adicionar no aquivo Dockerfile.prod, `RUN chown -R www-data:www-data /var/www`
+
+- Link sobre o erro: [Permission Denied Error using Laravel & Docker](https://stackoverflow.com/questions/48619445/permission-denied-error-using-laravel-docker)
