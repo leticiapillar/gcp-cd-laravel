@@ -33,7 +33,7 @@ O comando abaixo cria um secret generico para o MySQL via linha de comando para 
 - *Obs.:* Caso a criação e definição a secret tenha sido feita depois a das configurações de volume e deployment, delete estes e os crie novamente.
 
 - Comando para criar a secret
-```Bash
+```bash
 # Cria uma secret de forma literal
 > kubectl create secret generic mysql-pass --from-literal=password='a1s2d3f4'
 
@@ -43,7 +43,7 @@ O comando abaixo cria um secret generico para o MySQL via linha de comando para 
 
 - *Criando um banco de dados e testando o volume persistente*
 
-```Bash
+```bash
 # Executamos o pod de serviço do mysql
 > kubectl get pods
 NAME                               READY   STATUS    RESTARTS   AGE
@@ -77,12 +77,12 @@ mysql> show databases;
 O `ConfigMap` do nginx aponta para este diretorio `/usr/share/nginx/html`.
 
 No arquivodo de deployment adicionar o comando abaixo na especificação do container do nginx, para criar o arquivo `index.php`
-```Bash
+```bash
 > command: ["/bin/sh", "-c", "touch /usr/share/nginx/html/index.php; nginx -g 'daemon off;'"]
 ```
 
 - *Executando o POD do Nginx*
-```Bash
+```bash
 > kubectl exec -it nginx-deployment-56dd4d8778-rdfzp apk update
 > kubectl exec -it nginx-deployment-56dd4d8778-rdfzp apk add  bash
 > kubectl exec -it nginx-deployment-56dd4d8778-rdfzp bash
@@ -91,7 +91,7 @@ No arquivodo de deployment adicionar o comando abaixo na especificação do cont
 ***Configurações da Aplicação Laravel***
 
 No arquivodo de deployment adicionar o comando abaixo na especificação do container do PHP, para criar o link sinbolico entre os diretorios `/var/www /usr/share/nginx`, e executar um script com os comando de execução do php e migração.
-```Bash
+```bash
 > command: ["/bin/sh","-c","ln -s /var/www /usr/share/nginx; /var/www/k8s/entrypoint.sh; php-fpm;"]
 ```
 
